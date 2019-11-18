@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% block menu %}
+    {% if request.user.is_authenticated %}
+        <li class="nav-item"><a href="{% url 'webapp:order_update' order.pk%}" class="nav-link">Редактировать заказ</a></li>
+        <li class="nav-item"><a href="{% url 'webapp:order_product_add' order.pk%}" class="nav-link">Добавить товар</a></li>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h1>Список заказов</h1>
+    <div class="order-list">
+        <p><b>Клиент:</b> {{ order.first_name }} {{ order.last_name }} <b>Email:</b> {{ order.email }}</p>
+        <p><b>Пользователь:</b>{{ order.user }} <b>тел:</b> {{ order.phone }}</p>
+        <p><b>Статус:</b> {{ order.status }}</p>
+        {% for product in order.products.all %}
+            <p>{{ product }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}

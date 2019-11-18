@@ -14,14 +14,17 @@ class BasketOrderCreateForm(ModelForm):
     def clean_first_name(self):
         if not self.user and not self.cleaned_data.get('first_name'):
             raise ValidationError('Вы должны авторизоваться либо указать ваше имя!')
+        return self.cleaned_data.get('first_name')
 
     def clean_email(self):
         if not self.user and not self.cleaned_data.get('email'):
             raise ValidationError('Вы должны авторизоваться либо указать ваш email!')
+        return self.cleaned_data.get('email')
 
     def clean_phone(self):
         if not self.user and not self.cleaned_data.get('phone'):
             raise ValidationError('Вы должны авторизоваться либо указать ваш телефон!')
+        return self.cleaned_data.get('phone')
 
     def save(self, commit=True):
         self.instance.user = self.user
@@ -54,3 +57,9 @@ class OrderProductForm(ModelForm):
     class Meta:
         model = OrderProduct
         fields = ['product', 'amount']
+
+
+class OrderCreateForm(ModelForm):
+    class Meta:
+        model = Order
+        exclude = ['created_at', 'updated_at', 'products']

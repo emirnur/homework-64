@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from webapp.forms import BasketOrderCreateForm
+from webapp.forms import BasketOrderCreateForm, OrderCreateForm, OrderProductForm
 from webapp.models import Product, OrderProduct, Order
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib import messages
@@ -148,6 +148,7 @@ class BasketView(StatsMixin, CreateView):
 
 class OrderListView(ListView):
     template_name = 'order/list.html'
+    model = Order
 
     def get_queryset(self):
         if self.request.user.has_perm('webapp:view_order'):
@@ -157,6 +158,7 @@ class OrderListView(ListView):
 
 class OrderDetailView(DetailView):
     template_name = 'order/detail.html'
+    model = Order
 
     def get_queryset(self):
         if self.request.user.has_perm('webapp:view_order'):
@@ -166,12 +168,20 @@ class OrderDetailView(DetailView):
 
 class OrderCreateView(CreateView):
     model = Order
-    pass
+    form_class = OrderCreateForm
+    template_name = 'order/create.html'
+
+    def get_success_url(self):
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 
 class OrderUpdateView(UpdateView):
     model = Order
-    pass
+    form_class = OrderCreateForm
+    template_name = 'order/update.html'
+
+    def get_success_url(self):
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 
 class OrderDeliverView(View):
@@ -186,7 +196,11 @@ class OrderCancelView(View):
 
 class OrderProductCreateView(CreateView):
     model = OrderProduct
-    pass
+    form_class = OrderProductForm
+    template_name = 'order/product_add.html'
+
+    def get_success_url(self):
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 
 class OrderProductUpdateView(UpdateView):

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Orders{% endblock %}
+{% block menu %}
+    {% if request.user.is_authenticated %}
+        <li class="nav-item"><a href="{% url 'webapp:order_create' %}" class="nav-link">Создать заказ</a></li>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h1>Список заказов</h1>
+    <div class="order-list">
+        {% for order in order_list %}
+            <div class="order">
+                <p><b>Клиент:</b> {{ order.first_name }} {{ order.last_name }} <b>Email:</b> {{ order.email }}</p>
+                <p><b>Created at:</b> {{ order.created_at }}</p>
+                <p class="order-links">
+                    <a href="{% url 'webapp:order_detail' order.pk %}">More</a>
+                    <a href="">Edit</a>
+                    <a href="">Delete</a>
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
